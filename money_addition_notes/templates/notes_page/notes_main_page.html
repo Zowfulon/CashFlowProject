@@ -1,0 +1,16 @@
+{% extends 'CashFlowProject/base.html' %}
+{% load static %}
+{% block content %}
+    <h2 class="mt-40">Веб-сервис для управления движением денежных средств</h2>
+    <div class="note-filters">
+        {% include 'notes_page/notes_dropdown_filters.html' %}
+    </div>
+
+    <div class="note-cards mt-40">
+        {% include 'notes_page/notes_table.html' %}
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script id="main.js" language="JavaScript" type="text/javascript" src="{% static 'js/mainpage/mainpage.js' %}"></script>
+{% endblock %}

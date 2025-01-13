@@ -1,0 +1,42 @@
+.site-content{
+    width: 1400px!important;
+    align-items: center!important;
+    position: absolute!important;
+    left: 10% !important;
+}
+
+.note-filters{
+    margin-top: 50px!important;
+}
+
+
+.hidden{
+    display: none!important;
+}
+
+.mr-12{
+    margin-right: 12px!important;
+}
+
+.mt-40 {
+    margin-top: 40px!important;
+}
+
+.button-left{
+    float:right!important;
+}
+
+.w-240{
+    width: 240px!important;
+}
+
+.w-120{
+    width: 120px!important;
+}
+.w-160{
+    width: 160px!important;
+}
+
+.w-24{
+    width: 24px!important;
+}

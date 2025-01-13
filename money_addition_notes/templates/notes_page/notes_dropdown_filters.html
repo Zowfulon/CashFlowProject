@@ -1,0 +1,48 @@
+<div class="dropdown d-flex ">
+    <div class="status-filters mr-12">
+        <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Статус</a>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><h6 class="dropdown-header">Выберите статус</h6></li>
+            <li><a class="dropdown-item">Действие</a></li>
+        </ul>
+    </div>
+
+    <div class="money_type-filters mr-12">
+        <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Тип</a>
+        <ul class="dropdown-menu money_type-list" aria-labelledby="dropdownMenuLink">
+            <li><h6 class="dropdown-header">Выберите тип</h6></li>
+            {% for money_type in money_types %}
+                <li><a class="dropdown-item money_type-item {% if filters.money_type == money_type.slug %}active{% endif %}" data-slug="{{ money_type.slug }}">{{ money_type.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="category-filters {% if not filters.money_type %}hidden{% endif %} mr-12">
+        <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Категория</a>
+        <ul class="dropdown-menu category-list" aria-labelledby="dropdownMenuLink">
+            <li><h6 class="dropdown-header">Выберите категорию</h6></li>
+            {% for category in filtered_categories %}
+                <li ><a class="dropdown-item category-item {% if filters.category == category.slug %}active{% endif %}" data-slug="{{ category.slug }}">{{ category.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="subcategory-filters {% if not filters.category %}hidden{% endif %} mr-12">
+        <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Подкатегория</a>
+        <ul class="dropdown-menu subcategory-list" aria-labelledby="dropdownMenuLink">
+            <li><h6 class="dropdown-header">Выберите подкатегорию</h6></li>
+            {% for subcategory in filtered_subcategories %}
+                <li ><a class="dropdown-item subcategory-item {% if filters.subcategory == subcategory.slug %}active{% endif %}" data-slug="{{ subcategory.slug }}">{{ subcategory.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="mr-12 d-flex align-items-center">
+        <a>От</a>
+        <input type="date" class="form-control  w-160 date_gte-item">
+    </div>
+    <div class="mr-12 d-flex align-items-center">
+        <a>До</a>
+        <input type="date" class="form-control mr-12 w-160 date_lte-item">
+    </div>
+    <a class="btn btn-primary note-filter-button">Применить</a>
+</div>

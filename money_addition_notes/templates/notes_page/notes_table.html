@@ -1,0 +1,35 @@
+{% if notes %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Дата создания</th>
+                <th scope="col">Статус</th>
+                <th scope="col">Тип</th>
+                <th scope="col">Категория</th>
+                <th scope="col">Подкатегория</th>
+                <th scope="col">Сумма</th>
+                <th scope="col">Комментарий</th>
+                <th scope="col">Взаимодействие</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for note in notes %}
+                <tr>
+                  <th scope="row" class="w-24">{{ forloop.counter }}</th>
+                  <td class="w-120">{{ note.date_created|date:'d.m.Y' }} г.</td>
+                  <td class="w-120">{{ note.status }}</td>
+                  <td class="w-120">{{ note.money_type }}</td>
+                  <td class="w-120">{{ note.category }}</td>
+                  <td class="w-120">{{ note.subcategory }}</td>
+                  <td class="w-120">{{ note.money_value }} р.</td>
+                  <td class="w-240">{{ note.comment }}</td>
+                  <td class="w-120"><a href="#">Редактировать</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else%}
+    <h2>Извините, но по заданным фильтр поиск не выдал результатов</h2>
+{% endif %}
+
