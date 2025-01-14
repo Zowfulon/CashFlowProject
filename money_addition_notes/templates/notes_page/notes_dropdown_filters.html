@@ -24,7 +24,7 @@
         <ul class="dropdown-menu category-list" aria-labelledby="dropdownMenuLink">
             <li><h6 class="dropdown-header">Выберите категорию</h6></li>
             <div class="category-item_container">
-                {% include 'includes/category_item.html' with filteded_data=filtered_categories %}
+                {% include 'includes/category_item.html' with filteded_data=filtered_categories filter_clm=filters.category %}
             </div>
         </ul>
     </div>
@@ -34,7 +34,7 @@
         <ul class="dropdown-menu subcategory-list" aria-labelledby="dropdownMenuLink">
             <li><h6 class="dropdown-header">Выберите подкатегорию</h6></li>
             <div class="subcategory-item_container">
-                {% include 'includes/subcategory_item.html' with filteded_data=filtered_subcategories %}
+                {% include 'includes/subcategory_item.html' with filteded_data=filtered_subcategories filter_clm=filters.subcategory %}
             </div>
         </ul>
     </div>

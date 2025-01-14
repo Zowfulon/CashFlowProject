@@ -1,10 +1,12 @@
+import datetime
+
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.views import generic
 
 from CashFlowProject.utils import get_attributes, get_filtered_queryset, \
-    get_new_parameters
+    get_new_parameters, all_filters_active
 from money_addition_notes.models import MoneyAdditionNote, MoneyAdditionType, \
     MoneyAdditionCategory, MoneyAdditionSubCategory, MoneyAdditionStatus
 
@@ -85,6 +87,8 @@ def change_tabs(request):
 
 
 class NotesDetailView(generic.DetailView):
+    """Детальная страница записи с формой и возможностью сохранить
+       изменения и удалить запись"""
     model = MoneyAdditionNote
     template_name = 'notes_edit/note_edit_form.html'
     context_object_name = 'note'
@@ -104,6 +108,62 @@ class NotesDetailView(generic.DetailView):
         return context
 
     def post(self, request, **kwargs):
-        if request.is_ajax():
-            post_data = get_attributes(request.POST)
-            return redirect('/')
+        note = self.get_object()
+        data = {'success': True, 'message': 'Ваши данные успешно обновлены'}
+        if request.POST.get('edit_type') == 'delete':
+            note.delete()
+        else:
+            post_data = get_attributes(request.POST, 'edit')
+            if not all_filters_active(post_data):
+                data = {
+                    'success': False,
+                    'message': 'Произошла ошибка. Все поля, за исключением '
+                               'комментария, являются обязательными'}
+            else:
+                note.date_created = datetime.datetime.strptime(
+                    post_data['date_created'], '%Y-%m-%d')
+                note.status = MoneyAdditionStatus.objects.get(
+                    slug=post_data['status'])
+                note.subcategory = MoneyAdditionSubCategory.objects.get(
+                    slug=post_data['subcategory'])
+                note.category = note.subcategory.money_category
+                note.money_type = note.category.money_type
+                note.comment = post_data['comment']
+                note.money_value = float(post_data['money_value'])
+                note.save()
+        return JsonResponse(data)
+
+
+class NoteCreateView(generic.TemplateView):
+    """Страница создания записи"""
+    template_name = 'notes_edit/note_edit_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'title': 'Создание записи',
+            'statuses': MoneyAdditionStatus.objects.all(),
+            'money_types': MoneyAdditionType.objects.all(),
+            'today': datetime.datetime.today().date()
+        })
+        return context
+
+    def post(self, request, **kwargs):
+        post_data = get_attributes(request.POST, 'edit')
+        data = {'success': True, 'message': 'Ваши данные успешно обновлены'}
+        if not all_filters_active(post_data):
+            data = {
+                'success': False,
+                'message': 'Произошла ошибка. Все поля, за исключением '
+                           'комментария, являются обязательными'}
+        else:
+            subcategory = MoneyAdditionSubCategory.objects.get(slug=post_data['subcategory'])
+            MoneyAdditionNote.objects.create(
+                date_created=datetime.datetime.strptime(
+                    post_data['date_created'], '%Y-%m-%d'),
+                status=MoneyAdditionStatus.objects.get(slug=post_data['status']),
+                subcategory=subcategory, category=subcategory.money_category,
+                money_type=subcategory.money_category.money_type,
+                money_value=float(post_data['money_value']),
+                comment=post_data['comment'])
+        return JsonResponse(data)

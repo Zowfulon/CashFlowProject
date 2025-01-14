@@ -5,63 +5,136 @@
 
 {% block content %}
     <h2 class="mt-40">{{ title }}</h2>
-
-    <div class="mt-40 align-items-center">
-        <h6>Дата создания</h6>
-        <input type="date" class="form-control mr-12 w-160 date_created-item">
-    </div>
-
-    <div class="d-flex mt-40">
-        <div class="status-filters mr-12">
-            <a class="btn btn-secondary dropdown-toggle status-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{ note.status.name }}</a>
-            <ul class="dropdown-menu status-list" aria-labelledby="dropdownMenuLink">
-                <li><h6 class="dropdown-header">Выберите статус</h6></li>
-                {% for status in statuses %}
-                    <li><a class="dropdown-item status-item {% if note.status == status %}active{% endif %}" data-slug="{{ status.slug }}">{{ status.name }}</a></li>
-                {% endfor %}
-            </ul>
+    {% if note %}
+        <div class="mt-40 align-items-center">
+            <h6>Дата создания</h6>
+            <input type="date" class="form-control mr-12 w-160 date_created-item" value="{{ note.date_created|date:"Y-m-d" }}">
         </div>
 
-        <div class="money_type-filters mr-12">
-            <a class="btn btn-secondary dropdown-toggle money_type-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{ note.money_type.name }}</a>
-            <ul class="dropdown-menu money_type-list" aria-labelledby="dropdownMenuLink">
-                <li><h6 class="dropdown-header">Выберите тип</h6></li>
-                {% for money_type in money_types %}
-                    <li><a class="dropdown-item money_type-item {% if note.money_type == money_type %}active{% endif %}" data-slug="{{ money_type.slug }}">{{ money_type.name }}</a></li>
-                {% endfor %}
-            </ul>
+        <div class="d-flex mt-40">
+            <div class="status-filters mr-12">
+                <a class="btn btn-secondary dropdown-toggle status-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{ note.status.name }}</a>
+                <ul class="dropdown-menu status-list" aria-labelledby="dropdownMenuLink">
+                    <li><h6 class="dropdown-header">Выберите статус</h6></li>
+                    {% for status in statuses %}
+                        <li><a class="dropdown-item status-item {% if note.status == status %}active{% endif %}" data-slug="{{ status.slug }}">{{ status.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="money_type-filters mr-12">
+                <a class="btn btn-secondary dropdown-toggle money_type-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{ note.money_type.name }}</a>
+                <ul class="dropdown-menu money_type-list" aria-labelledby="dropdownMenuLink">
+                    <li><h6 class="dropdown-header">Выберите тип</h6></li>
+                    {% for money_type in money_types %}
+                        <li><a class="dropdown-item money_type-item {% if note.money_type == money_type %}active{% endif %}" data-slug="{{ money_type.slug }}">{{ money_type.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="category-filters mr-12">
+                <a class="btn btn-secondary dropdown-toggle category-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{ note.category.name }}</a>
+                <ul class="dropdown-menu category-list" aria-labelledby="dropdownMenuLink">
+                    <li><h6 class="dropdown-header">Выберите категорию</h6></li>
+                    <div class="category-item_container">
+                        {% include 'includes/category_item.html' with filtered_data=categories filter_clm=note.category.slug %}
+                    </div>
+                </ul>
+            </div>
+
+            <div class="subcategory-filters mr-12">
+                <a class="btn btn-secondary dropdown-toggle subcategory-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{ note.subcategory.name }}</a>
+                <ul class="dropdown-menu subcategory-list" aria-labelledby="dropdownMenuLink">
+                    <li><h6 class="dropdown-header">Выберите подкатегорию</h6></li>
+                    <div class="subcategory-item_container">
+                        {% include 'includes/subcategory_item.html' with filtered_data=subcategories filter_clm=note.subcategory.slug %}
+                    </div>
+                </ul>
+            </div>
         </div>
-        <div class="category-filters mr-12">
-            <a class="btn btn-secondary dropdown-toggle category-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{ note.category.name }}</a>
-            <ul class="dropdown-menu category-list" aria-labelledby="dropdownMenuLink">
-                <li><h6 class="dropdown-header">Выберите категорию</h6></li>
-                <div class="category-item_container">
-                    {% include 'includes/category_item.html' with filteded_data=categories %}
-                </div>
-            </ul>
+        <div class="mt-40 ">
+            <h6>Цена в рублях</h6>
+            <div class="d-flex align-items-center">
+                <input type="number" class="form-control money_value-item w-240" min="0" max="9999999" value="{{ note.money_value|unlocalize }}" onKeyPress="if(this.value.length === 7) return false">
+                <a> р.</a>
+            </div>
+
         </div>
 
-        <div class="subcategory-filters mr-12">
-            <a class="btn btn-secondary dropdown-toggle subcategory-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{ note.subcategory.name }}</a>
-            <ul class="dropdown-menu subcategory-list" aria-labelledby="dropdownMenuLink">
-                <li><h6 class="dropdown-header">Выберите подкатегорию</h6></li>
-                <div class="subcategory-item_container">
-                    {% include 'includes/subcategory_item.html' with filteded_data=subcategories %}
-                </div>
-            </ul>
+        <textarea class="form-control comment-item mt-40 w-480" rows="5">{{ note.comment }}</textarea>
+        <div class="error-message_block">
+            <p class="text-danger mb-1 save-error hidden">Произошла ошибка. Все поля, за исключением комментария, являются обязательными</p>
+            <p class="text-success mb-1 save-success hidden">Ваши данные успешно обновлены</p>
         </div>
-    </div>
-    <input type="number" class="money_value-input mt-40 w-240" value="{{ note.money_value|unlocalize }}">
-    <textarea class="form-control comment-input mt-40 w-480" rows="5">{{ note.comment }}</textarea>
-    <div class="d-flex mt-40">
-        <a class="btn btn-primary note-update-button mr-12">Cохранить изменения</a>
-        <a class="btn btn-secondary note-back-button mr-12" href="{% url 'notes:money_page' %}">Выйти без изменений</a>
-        <a class="btn btn-danger note-delete-button">Удалить запись</a>
-    </div>
+        <div class="d-flex mt-40">
+            <a class="btn btn-primary note-update-button mr-12" data-url>Cохранить изменения</a>
+            <a class="btn btn-secondary note-back-button mr-12" href="{% url 'notes:money_page' %}">Выйти без изменений</a>
+            <a class="btn btn-danger note-delete-button">Удалить запись</a>
+        </div>
+    {% else %}
+        <div class="mt-40 align-items-center">
+            <h6>Дата создания</h6>
+            <input type="date" class="form-control mr-12 w-160 date_created-item" value="{{ today|date:"Y-m-d" }}">
+        </div>
 
-    </div>
+        <div class="d-flex mt-40">
+            <div class="status-filters mr-12">
+                <a class="btn btn-secondary dropdown-toggle status-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Статус</a>
+                <ul class="dropdown-menu status-list" aria-labelledby="dropdownMenuLink">
+                    <li><h6 class="dropdown-header">Выберите статус</h6></li>
+                    {% for status in statuses %}
+                        <li><a class="dropdown-item status-item" data-slug="{{ status.slug }}">{{ status.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="money_type-filters mr-12">
+                <a class="btn btn-secondary dropdown-toggle money_type-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Тип</a>
+                <ul class="dropdown-menu money_type-list" aria-labelledby="dropdownMenuLink">
+                    <li><h6 class="dropdown-header">Выберите тип</h6></li>
+                    {% for money_type in money_types %}
+                        <li><a class="dropdown-item money_type-item" data-slug="{{ money_type.slug }}">{{ money_type.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="category-filters mr-12">
+                <a class="btn btn-secondary dropdown-toggle category-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Категория</a>
+                <ul class="dropdown-menu category-list" aria-labelledby="dropdownMenuLink">
+                    <li><h6 class="dropdown-header">Выберите категорию</h6></li>
+                    <div class="category-item_container"></div>
+                </ul>
+            </div>
+
+            <div class="subcategory-filters mr-12">
+                <a class="btn btn-secondary dropdown-toggle subcategory-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Подкатегория</a>
+                <ul class="dropdown-menu subcategory-list" aria-labelledby="dropdownMenuLink">
+                    <li><h6 class="dropdown-header">Выберите подкатегорию</h6></li>
+                    <div class="subcategory-item_container"></div>
+                </ul>
+            </div>
+        </div>
+        <div class="mt-40 ">
+            <h6>Цена в рублях</h6>
+            <div class="d-flex align-items-center">
+                <input type="number" class="form-control money_value-item w-240" min="0" max="9999999" maxlength="7" onKeyPress="if(this.value.length === 7) return false">
+                <a> р.</a>
+            </div>
+
+        </div>
+
+        <textarea class="form-control comment-item mt-40 w-480" rows="5"></textarea>
+        <div class="error-message_block">
+            <p class="text-danger mb-1 save-error hidden">Произошла ошибка. Все поля, за исключением комментария, являются обязательными</p>
+            <p class="text-success mb-1 save-success hidden">Ваши данные успешно обновлены</p>
+        </div>
+        <div class="d-flex mt-40">
+            <a class="btn btn-primary note-create-button mr-12" data-url>Создать запись</a>
+            <a class="btn btn-secondary note-back-button mr-12" href="{% url 'notes:money_page' %}">Вернуться на главную</a>
+        </div>
+    {% endif %}
+
+
 {% endblock %}
 
 {% block extra_js %}
-    <script id="main.js" language="JavaScript" type="text/javascript" src="{% static 'js/mainpage/mainpage.js' %}"></script>
+    <script id="edit.js" language="JavaScript" type="text/javascript" src="{% static 'js/editpage/edit.js' %}"></script>
 {% endblock %}

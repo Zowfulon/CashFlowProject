@@ -1,3 +1,20 @@
+function change_tabs(method, parent_slug){
+        console.log(parent_slug)
+        $.ajax({
+        url: '/change_tabs/',
+        type: 'POST',
+        data: {
+            'method': method,
+            'parent_slug': parent_slug
+        },
+        success: function (data) {
+            $('.'+data['response_method']+'-item_container').html(data['html_data'])
+        },
+    })
+}
+
+
+
 $(document).ready(function () {
     function getCookie(name) {
         let cookieValue = null;

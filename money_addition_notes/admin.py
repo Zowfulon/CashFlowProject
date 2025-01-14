@@ -7,11 +7,11 @@ from money_addition_notes.models import MoneyAdditionNote, MoneyAdditionStatus, 
 
 # Register your models here.
 
-@admin.register(MoneyAdditionNote)
-class MoneyAdditionNoteAdmin(nested.NestedModelAdmin):
-    fields = (
-        'date_created', ('status', 'money_type', 'category', 'subcategory'),
-        'money_value', 'comment')
+# @admin.register(MoneyAdditionNote)
+# class MoneyAdditionNoteAdmin(nested.NestedModelAdmin):
+#     fields = (
+#         'date_created', ('status', 'money_type', 'category', 'subcategory'),
+#         'money_value', 'comment')
 
 
 @admin.register(MoneyAdditionStatus)
@@ -34,17 +34,8 @@ class MoneyAdditionCategoryInline(nested.NestedTabularInline):
 
 @admin.register(MoneyAdditionType)
 class MoneyAdditionTypeAdmin(nested.NestedModelAdmin):
+    """Таблица управления справочниками реализована в административной
+    панели с помощью модуля django-nested-admin для допуска использования
+    свыше одного уровня"""
     prepopulated_fields = {'slug': ('name',)}
     inlines = [MoneyAdditionCategoryInline]
-
-
-
-
-# @admin.register(MoneyAdditionCategory)
-# class MoneyAdditionCategoryAdmin(nested.NestedModelAdmin):
-#     prepopulated_fields = {'slug': ('name',)}
-#
-#
-# @admin.register(MoneyAdditionSubCategory)
-# class MoneyAdditionSubCategoryAdmin(nested.NestedModelAdmin):
-#     prepopulated_fields = {'slug': ('name',)}

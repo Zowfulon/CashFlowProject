@@ -37,12 +37,12 @@ class MoneyAdditionNote(models.Model):
 
 
 class MoneyAdditionStatus(models.Model):
-    name = models.CharField(verbose_name='Наименование статуса', max_length=120)
+    name = models.CharField(
+        verbose_name='Наименование статуса', max_length=120, unique=True)
     slug = models.SlugField(
         verbose_name="Slug", max_length=255, blank=True, db_index=True,
         help_text='Нужен для обращения к элементам. Генерируется автоматически',
-        unique=True,
-    )
+        unique=True)
 
     class Meta:
         ordering = ['name']
@@ -54,7 +54,8 @@ class MoneyAdditionStatus(models.Model):
 
 
 class MoneyAdditionType(models.Model):
-    name = models.CharField(verbose_name='Наименование типа', max_length=120)
+    name = models.CharField(
+        verbose_name='Наименование типа', max_length=120, unique=True)
     slug = models.SlugField(
         verbose_name="Slug", max_length=255, blank=True, db_index=True,
         help_text='Нужен для обращения к элементам. Генерируется автоматически',
@@ -72,7 +73,7 @@ class MoneyAdditionType(models.Model):
 
 class MoneyAdditionCategory(models.Model):
     name = models.CharField(
-        verbose_name='Наименование категории', max_length=120)
+        verbose_name='Наименование категории', max_length=120, unique=True)
     money_type = models.ForeignKey(
         'MoneyAdditionType', related_name='categories', verbose_name='Тип',
         blank=False, on_delete=models.CASCADE)
@@ -93,15 +94,14 @@ class MoneyAdditionCategory(models.Model):
 
 class MoneyAdditionSubCategory(models.Model):
     name = models.CharField(
-        verbose_name='Наименование подкатегории', max_length=120)
+        verbose_name='Наименование подкатегории', max_length=120, unique=True)
     money_category = models.ForeignKey(
         'MoneyAdditionCategory', related_name='subcategories',
         verbose_name='Категория', blank=False, on_delete=models.CASCADE)
     slug = models.SlugField(
         verbose_name="Slug", max_length=255, blank=True, db_index=True,
         help_text='Нужен для обращения к элементам. Генерируется автоматически',
-        unique=True,
-    )
+        unique=True)
 
     class Meta:
         ordering = ['name']

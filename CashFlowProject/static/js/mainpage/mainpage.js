@@ -12,26 +12,8 @@ function note_filter(data){
     })
 }
 
-function change_tabs(method, parent_slug){
-        console.log(parent_slug)
-        $.ajax({
-        url: '/change_tabs/',
-        type: 'POST',
-        data: {
-            'method': method,
-            'parent_slug': parent_slug
-        },
-        success: function (data) {
-            console.log(data)
-            $('.'+data['response_method']+'-item_container').html(data['html_data'])
-        },
-    })
-}
-
 
 $(document).ready(function () {
-
-
     $(document).on('click', '.note-filter-button', function (){
         const data = {
             'status': $('.status-item.active').data('slug'),
@@ -83,9 +65,11 @@ $(document).ready(function () {
         if (category.hasClass('hidden')) {
             category.removeClass('hidden')
         }
+        $('.subcategory-item_container').html('')
         change_tabs('money_type', $(this).data('slug'))
     })
     $(document).on('click', '.category-item', function (){
+        $('.subcategory-input').text('Подкатегория')
         $('.category-item.active').removeClass('active')
         $(this).addClass('active')
         $('.category-input').text($(this).text())

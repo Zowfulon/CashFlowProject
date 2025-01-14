@@ -1,17 +1,28 @@
 import datetime
 
 
-def get_attributes(data):
-    """Вспомогательный метод, собирающий все табы при подзагрузке и
-    Post запросе"""
+def get_attributes(data, comp_method='filter'):
+    """Вспомогательный метод, собирающий все табы
+    при подзагрузке и при изменении записи"""
     final_data = {
         'money_type': data.get('money_type', None),
         'status': data.get('status', None),
         'category': data.get('category', None),
         'subcategory': data.get('subcategory', None),
-        'date_gte': data.get('date_gte') if data.get('date_gte') != '' else None,
-        'date_lte': data.get('date_lte') if data.get('date_lte') != '' else None
     }
+    if comp_method == 'edit':
+        final_data.update({
+            'date_created': data.get('date_created')
+                            if data.get('date_created') != '' else None,
+            'money_value': data.get('money_value', None),
+            'comment': data.get('comment', None)
+        })
+    else:
+        final_data.update({
+            'date_gte': data.get('date_gte')
+                        if data.get('date_gte') != '' else None,
+            'date_lte': data.get('date_lte')
+                        if data.get('date_lte') != '' else None})
     return final_data
 
 
@@ -59,3 +70,9 @@ def get_new_parameters(data):
     if final_url != '':
         final_url = '?' + final_url
     return final_url
+
+
+def all_filters_active(post_data):
+    return bool(post_data['date_created'] and post_data['status'] and
+                post_data['money_type'] and post_data['category'] and
+                post_data['subcategory'] and post_data['money_value'])
