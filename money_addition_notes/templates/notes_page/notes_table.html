@@ -19,12 +19,17 @@
                   <th scope="row" class="w-24">{{ forloop.counter }}</th>
                   <td class="w-120">{{ note.date_created|date:'d.m.Y' }} г.</td>
                   <td class="w-120">{{ note.status }}</td>
-                  <td class="w-120">{{ note.money_type }}</td>
-                  <td class="w-120">{{ note.category }}</td>
+                  <td class="w-120">{{ note.subcategory.money_category.money_type }}</td>
+                  <td class="w-120">{{ note.subcategory.money_category }}</td>
                   <td class="w-120">{{ note.subcategory }}</td>
                   <td class="w-120">{{ note.money_value }} р.</td>
                   <td class="w-240">{{ note.comment }}</td>
-                  <td class="w-120"><a href="#">Редактировать</a></td>
+                    {% if user.is_authenticated %}
+                        <td class="w-120"><a href="{% url 'notes:change_note' note.pk %}">Редактировать</a></td>
+                    {% else %}
+                        <td class="w-120"><a href="{% url 'admin:index' %}">Редактировать</a></td>
+                    {% endif %}
+
                 </tr>
             {% endfor %}
         </tbody>

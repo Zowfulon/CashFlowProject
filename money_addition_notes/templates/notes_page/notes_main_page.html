@@ -1,7 +1,16 @@
 {% extends 'CashFlowProject/base.html' %}
 {% load static %}
+
+{% block title %}Главная страница{% endblock %}
+
 {% block content %}
     <h2 class="mt-40">Веб-сервис для управления движением денежных средств</h2>
+    {% if user.is_authenticated %}
+        <a class="btn btn-secondary mt-40 w-240 mr-12">Создать запись</a>
+        <a class="btn btn-secondary mt-40 w-240" href="{% url 'admin:money_addition_notes_moneyadditiontype_changelist' %}">Управление типами и их зависимыми</a>
+        <a class="btn btn-secondary mt-40 w-240" href="{% url 'admin:money_addition_notes_moneyadditionstatus_changelist' %}">Управление статусами</a>
+    {% endif %}
+
     <div class="note-filters">
         {% include 'notes_page/notes_dropdown_filters.html' %}
     </div>

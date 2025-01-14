@@ -40,7 +40,9 @@ class MoneyAdditionStatus(models.Model):
     name = models.CharField(verbose_name='Наименование статуса', max_length=120)
     slug = models.SlugField(
         verbose_name="Slug", max_length=255, blank=True, db_index=True,
-        unique=True)
+        help_text='Нужен для обращения к элементам. Генерируется автоматически',
+        unique=True,
+    )
 
     class Meta:
         ordering = ['name']
@@ -55,7 +57,9 @@ class MoneyAdditionType(models.Model):
     name = models.CharField(verbose_name='Наименование типа', max_length=120)
     slug = models.SlugField(
         verbose_name="Slug", max_length=255, blank=True, db_index=True,
-        unique=True)
+        help_text='Нужен для обращения к элементам. Генерируется автоматически',
+        unique=True,
+    )
 
     class Meta:
         ordering = ['name']
@@ -74,7 +78,9 @@ class MoneyAdditionCategory(models.Model):
         blank=False, on_delete=models.CASCADE)
     slug = models.SlugField(
         verbose_name="Slug", max_length=255, blank=True, db_index=True,
-        unique=True)
+        help_text='Нужен для обращения к элементам. Генерируется автоматически',
+        unique=True,
+    )
 
     class Meta:
         ordering = ['name']
@@ -93,7 +99,9 @@ class MoneyAdditionSubCategory(models.Model):
         verbose_name='Категория', blank=False, on_delete=models.CASCADE)
     slug = models.SlugField(
         verbose_name="Slug", max_length=255, blank=True, db_index=True,
-        unique=True)
+        help_text='Нужен для обращения к элементам. Генерируется автоматически',
+        unique=True,
+    )
 
     class Meta:
         ordering = ['name']

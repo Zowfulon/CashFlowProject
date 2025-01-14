@@ -1,0 +1,67 @@
+{% extends 'CashFlowProject/base.html' %}
+{% load static l10n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <h2 class="mt-40">{{ title }}</h2>
+
+    <div class="mt-40 align-items-center">
+        <h6>Дата создания</h6>
+        <input type="date" class="form-control mr-12 w-160 date_created-item">
+    </div>
+
+    <div class="d-flex mt-40">
+        <div class="status-filters mr-12">
+            <a class="btn btn-secondary dropdown-toggle status-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{ note.status.name }}</a>
+            <ul class="dropdown-menu status-list" aria-labelledby="dropdownMenuLink">
+                <li><h6 class="dropdown-header">Выберите статус</h6></li>
+                {% for status in statuses %}
+                    <li><a class="dropdown-item status-item {% if note.status == status %}active{% endif %}" data-slug="{{ status.slug }}">{{ status.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="money_type-filters mr-12">
+            <a class="btn btn-secondary dropdown-toggle money_type-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{ note.money_type.name }}</a>
+            <ul class="dropdown-menu money_type-list" aria-labelledby="dropdownMenuLink">
+                <li><h6 class="dropdown-header">Выберите тип</h6></li>
+                {% for money_type in money_types %}
+                    <li><a class="dropdown-item money_type-item {% if note.money_type == money_type %}active{% endif %}" data-slug="{{ money_type.slug }}">{{ money_type.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="category-filters mr-12">
+            <a class="btn btn-secondary dropdown-toggle category-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{ note.category.name }}</a>
+            <ul class="dropdown-menu category-list" aria-labelledby="dropdownMenuLink">
+                <li><h6 class="dropdown-header">Выберите категорию</h6></li>
+                <div class="category-item_container">
+                    {% include 'includes/category_item.html' with filteded_data=categories %}
+                </div>
+            </ul>
+        </div>
+
+        <div class="subcategory-filters mr-12">
+            <a class="btn btn-secondary dropdown-toggle subcategory-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{{ note.subcategory.name }}</a>
+            <ul class="dropdown-menu subcategory-list" aria-labelledby="dropdownMenuLink">
+                <li><h6 class="dropdown-header">Выберите подкатегорию</h6></li>
+                <div class="subcategory-item_container">
+                    {% include 'includes/subcategory_item.html' with filteded_data=subcategories %}
+                </div>
+            </ul>
+        </div>
+    </div>
+    <input type="number" class="money_value-input mt-40 w-240" value="{{ note.money_value|unlocalize }}">
+    <textarea class="form-control comment-input mt-40 w-480" rows="5">{{ note.comment }}</textarea>
+    <div class="d-flex mt-40">
+        <a class="btn btn-primary note-update-button mr-12">Cохранить изменения</a>
+        <a class="btn btn-secondary note-back-button mr-12" href="{% url 'notes:money_page' %}">Выйти без изменений</a>
+        <a class="btn btn-danger note-delete-button">Удалить запись</a>
+    </div>
+
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script id="main.js" language="JavaScript" type="text/javascript" src="{% static 'js/mainpage/mainpage.js' %}"></script>
+{% endblock %}

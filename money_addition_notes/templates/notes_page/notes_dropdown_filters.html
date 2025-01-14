@@ -1,14 +1,16 @@
 <div class="dropdown d-flex ">
     <div class="status-filters mr-12">
-        <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Статус</a>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <a class="btn btn-secondary dropdown-toggle status-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{% if statuses %}{% for status in statuses %}{% if status.slug == filters.status %}{{ status.name }}{% elif forloop.last %}Статус{% endif %}{% endfor %}{% else %}Статус{% endif %}</a>
+        <ul class="dropdown-menu status-list" aria-labelledby="dropdownMenuLink">
             <li><h6 class="dropdown-header">Выберите статус</h6></li>
-            <li><a class="dropdown-item">Действие</a></li>
+            {% for status in statuses %}
+                <li><a class="dropdown-item status-item {% if filters.status == status.slug %}active{% endif %}" data-slug="{{ status.slug }}">{{ status.name }}</a></li>
+            {% endfor %}
         </ul>
     </div>
 
     <div class="money_type-filters mr-12">
-        <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Тип</a>
+        <a class="btn btn-secondary dropdown-toggle money_type-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{% if money_types %}{% for money_type in money_types %}{% if money_type.slug == filters.money_type %}{{ money_type.name }}{% elif forloop.last %}Тип{% endif %}{% endfor %}{% else %}Тип{% endif %}</a>
         <ul class="dropdown-menu money_type-list" aria-labelledby="dropdownMenuLink">
             <li><h6 class="dropdown-header">Выберите тип</h6></li>
             {% for money_type in money_types %}
@@ -18,22 +20,22 @@
     </div>
 
     <div class="category-filters {% if not filters.money_type %}hidden{% endif %} mr-12">
-        <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Категория</a>
+        <a class="btn btn-secondary dropdown-toggle category-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{% if filtered_categories %}{% for category in filtered_categories %}{% if category.slug == filters.category %}{{ category.name }}{% elif forloop.last %}Категория{% endif %}{% endfor %}{% else %}Категория{% endif %}</a>
         <ul class="dropdown-menu category-list" aria-labelledby="dropdownMenuLink">
             <li><h6 class="dropdown-header">Выберите категорию</h6></li>
-            {% for category in filtered_categories %}
-                <li ><a class="dropdown-item category-item {% if filters.category == category.slug %}active{% endif %}" data-slug="{{ category.slug }}">{{ category.name }}</a></li>
-            {% endfor %}
+            <div class="category-item_container">
+                {% include 'includes/category_item.html' with filteded_data=filtered_categories %}
+            </div>
         </ul>
     </div>
 
     <div class="subcategory-filters {% if not filters.category %}hidden{% endif %} mr-12">
-        <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Подкатегория</a>
+        <a class="btn btn-secondary dropdown-toggle subcategory-input" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">{% if filtered_subcategories%}{% for subcategory in filtered_subcategories %}{% if subcategory.slug == filters.subcategory %}{{ subcategory.name }}{% elif forloop.last %}Податегория{% endif %}{% endfor %}{% else %}Подкатегория{% endif %}</a>
         <ul class="dropdown-menu subcategory-list" aria-labelledby="dropdownMenuLink">
             <li><h6 class="dropdown-header">Выберите подкатегорию</h6></li>
-            {% for subcategory in filtered_subcategories %}
-                <li ><a class="dropdown-item subcategory-item {% if filters.subcategory == subcategory.slug %}active{% endif %}" data-slug="{{ subcategory.slug }}">{{ subcategory.name }}</a></li>
-            {% endfor %}
+            <div class="subcategory-item_container">
+                {% include 'includes/subcategory_item.html' with filteded_data=filtered_subcategories %}
+            </div>
         </ul>
     </div>
     <div class="mr-12 d-flex align-items-center">
@@ -44,5 +46,6 @@
         <a>До</a>
         <input type="date" class="form-control mr-12 w-160 date_lte-item">
     </div>
-    <a class="btn btn-primary note-filter-button">Применить</a>
+    <a class="btn btn-primary note-filter-button mr-12">Применить</a>
+    <a class="btn btn-secondary note-refresh-button">Очистить</a>
 </div>

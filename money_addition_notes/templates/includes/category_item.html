@@ -1,0 +1,3 @@
+{% for category in filtered_data %}
+    <a class="dropdown-item category-item {% if filters.category == category.slug %}active{% endif %}" data-slug="{{ category.slug }}">{{ category.name }}</a>
+{% endfor %}

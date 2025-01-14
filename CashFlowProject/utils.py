@@ -36,24 +36,26 @@ def get_filtered_queryset(queryset, get_data):
         date_lte = datetime.datetime.strptime(
             get_data['date_lte'], '%Y-%m-%d')
         queryset = queryset.filter(date_created__lte=date_lte)
+    queryset = queryset.select_related('status', 'subcategory')
     return queryset
 
 
 def get_new_parameters(data):
     """Собирает новую url для заданных параметров"""
     url_items = []
-    final_url = ''
     if data['status']:
-        url_items.append(f'?status={data["status"]}')
+        url_items.append(f'status={data["status"]}')
     if data['money_type']:
-        url_items.append(f'?money_type={data["money_type"]}')
+        url_items.append(f'money_type={data["money_type"]}')
         if data['category']:
-            url_items.append(f'?category={data["category"]}')
+            url_items.append(f'category={data["category"]}')
             if data['subcategory']:
-                url_items.append(f'?subcategory={data["subcategory"]}')
+                url_items.append(f'subcategory={data["subcategory"]}')
     if data['date_gte']:
-        url_items.append(f'?date_gte={data["date_gte"]}')
+        url_items.append(f'date_gte={data["date_gte"]}')
     if data['date_lte']:
-        url_items.append(f'?date_lte={data["date_lte"]}')
+        url_items.append(f'date_lte={data["date_lte"]}')
     final_url = '&'.join(item for item in url_items)
+    if final_url != '':
+        final_url = '?' + final_url
     return final_url
