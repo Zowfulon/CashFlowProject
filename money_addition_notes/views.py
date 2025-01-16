@@ -57,7 +57,8 @@ def notes_filter(request):
     notes = get_filtered_queryset(
         queryset=MoneyAdditionNote.objects.all(), get_data=post_data)
     html_data = render_to_string(
-        'notes_page/notes_table.html', context={"notes": notes})
+        'notes_page/notes_table.html',
+        context={"notes": notes, 'user': request.user})
     response_data = {'html_data': html_data, 'new_url': new_url}
     return JsonResponse(response_data, content_type='application/json')
 
